@@ -10,9 +10,11 @@ return new class extends Migration {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->text('comments');
-            $table->timestamp('date')->useCurrent();
             $table->foreignId('achievement_id')->constrained('achievements');
             $table->foreignId('student_id')->constrained('students');
+            $table->dateTime('date')->useCurrent();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -6,6 +6,7 @@ use App\Models\StudyProgram;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudyProgramRequest;
 use App\Http\Requests\UpdateStudyProgramRequest;
+use Illuminate\Support\Facades\DB;
 
 class StudyProgramController extends Controller
 {
@@ -14,7 +15,12 @@ class StudyProgramController extends Controller
      */
     public function index()
     {
-        //
+        $studyPrograms = StudyProgram::get();
+        return response()->json([
+            'data'=>$studyPrograms,
+            'message'=>'Success get data study programs'
+        ], 200);
+        // return view('admin-page.study-programs.index', compact('studyPrograms'));
     }
 
     /**
@@ -30,9 +36,24 @@ class StudyProgramController extends Controller
      */
     public function store(StoreStudyProgramRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $studyProgram = StudyProgram::create([
+                'name'=>$request->name
+            ]);
+            DB::commit();
+            return response()->json([
+                'data'=>$studyProgram,
+                'message'=>'Success create study program'
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed create study program',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
-
     /**
      * Display the specified resource.
      */
@@ -54,7 +75,23 @@ class StudyProgramController extends Controller
      */
     public function update(UpdateStudyProgramRequest $request, StudyProgram $studyProgram)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $studyProgram->update([
+                'name'=>$request->name
+            ]);
+            DB::commit();
+            return response()->json([
+                'data'=>$studyProgram,
+                'message'=>'Success update study program'
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed update study program',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -62,6 +99,19 @@ class StudyProgramController extends Controller
      */
     public function destroy(StudyProgram $studyProgram)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $studyProgram->delete();
+            DB::commit();
+            return response()->json([
+                'message'=>'Success delete study program'
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed delete study program',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 }

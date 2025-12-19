@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->enum('status', ['Draft', 'Verified', 'Publish'])->default('Draft');
             $table->foreignId('student_id')->constrained('students');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
