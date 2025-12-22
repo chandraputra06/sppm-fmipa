@@ -7,4 +7,3 @@ Route::get('/', function () {
     return view('homepage');
 });
 
-Route::resource('study-programs',StudyProgramController::class);
