@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('role', ['1', '2', '3'])->comment('1 = Admin, 2 = Dosen, 3 = Student');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
