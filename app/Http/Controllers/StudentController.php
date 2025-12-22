@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -15,7 +16,11 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::get();
-        return view('admin-page.students.index', compact('students'));
+        return response()->json([
+            'data'=>$students,
+            'message'=>'Success get data students'
+        ], 200);
+        // return view('admin-page.students.index', compact('students'));
     }
 
     /**
@@ -31,7 +36,26 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $students = Student::create([
+                'nim'=>$request->nim,
+                'name'=>$request->name,
+                'study_program_id'=>$request->study_program_id,
+                'user_id'=>$request->user_id,
+            ]);
+            DB::commit();
+            return response()->json([
+                'data'=>$students,
+                'message'=>'Success create student'
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed create student',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -55,7 +79,26 @@ class StudentController extends Controller
      */
     public function update(UpdateStudentRequest $request, Student $student)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $student->update([
+                'nim'=>$request->nim,
+                'name'=>$request->name,
+                'study_program_id'=>$request->study_program_id,
+                'user_id'=>$request->user_id,
+            ]);
+            DB::commit();
+            return response()->json([
+                'data'=>$student,
+                'message'=>'Success update student'
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed update student',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -63,6 +106,19 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $student->delete();
+            DB::commit();
+            return response()->json([
+                'message'=>'Success delete student'
+            ], 201);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed delete student',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 }
