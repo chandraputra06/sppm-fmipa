@@ -10,4 +10,6 @@ class Lecture extends Model
 {
     /** @use HasFactory<\Database\Factories\LectureFactory> */
     use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
 }

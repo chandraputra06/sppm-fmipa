@@ -18,9 +18,9 @@ class Achievement extends Model
     protected $guarded = []; 
 
     // Prestasi milik satu Mahasiswa (opsional, bisa null)
-    public function mahasiswa(): BelongsTo
+    public function students(): BelongsTo
     {
-        return $this->belongsTo(Student::class, 'nim_mahasiswa', 'nim');
+        return $this->belongsTo(Student::class);
     }
 
     // Prestasi punya banyak komentar
