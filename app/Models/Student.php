@@ -12,4 +12,9 @@ class Student extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function achievement()
+    {
+        return $this->hasMany(Achievement::class);
+    }
 }
