@@ -13,7 +13,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
 });
 Route::resource('study-programs',StudyProgramController::class);
 Route::resource('students', StudentController::class);
+Route::resource('users', UserController::class);

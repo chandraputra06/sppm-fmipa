@@ -4,7 +4,7 @@
             <!-- Logo -->
             <div class="flex items-center">
                 <a href="#" class="flex items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo MIPA" class="h-10 w-auto">
+                    <img src="{{ asset('build/images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
             </div>
 
