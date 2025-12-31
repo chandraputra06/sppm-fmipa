@@ -1,7 +1,17 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudyProgramController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/authenticate', [AuthController::class, 'login'])->name('auth.login');
+
+
+Route::prefix('admin')->namespace('admin')->group(function () {
+    Route::get('/dashboard', [AchievementController::class, 'index'])->name('admin.dashboard');
+});
 
 Route::get('/', function () {
     return view('homepage');
@@ -11,9 +21,8 @@ Route::get('/prestasi', function () {
     return view('prestasi.index');
 })->name('prestasi.index');
 
-Route::resource('study-programs',StudyProgramController::class);
+Route::resource('study-programs', StudyProgramController::class);
 
 Route::get('/prestasi/{id}', function ($id) {
     return view('prestasi.show');
 })->name('prestasi.show');
-

@@ -9,17 +9,13 @@
     @stack('styles')
 </head>
 <body class="bg-gray-50">
-    <!-- Navbar Component -->
-    <x-navbar />
-
+    <x-alert-error />
     <!-- Main Content -->
     <main>
         @yield('content')
     </main>
 
     <!-- Footer Component -->
-    <x-footer />
-
     @stack('scripts')
 </body>
 </html>

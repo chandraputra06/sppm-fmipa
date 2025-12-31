@@ -13,9 +13,9 @@ class AchievementController extends Controller
 
     public function index()
     {
-        $achievements = Achievement::orderByDesc('created_at')->paginate(10);
+        $achievements = Achievement::with('students')->orderByDesc('created_at')->paginate(10);
 
-        return view('admin-page.prestasi.index', compact('achievements'));
+        return view('admin-page.dashboard.index', compact('achievements'));
     }
 
     /**
@@ -38,7 +38,7 @@ class AchievementController extends Controller
             'judul_kegiatan'  => 'required|string|max:200',
             'jenis_prestasi'  => 'required|in:Akademik,Non-Akademik',
             'tingkat'         => 'required|in:Lokal,Nasional,Internasional',
-            'tanggal_kegiatan'=> 'required|date',
+            'tanggal_kegiatan' => 'required|date',
             'deskripsi'       => 'nullable|string',
             'file_bukti'      => 'nullable|file|mimes:pdf|max:2048',
             'file_foto'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -99,7 +99,7 @@ class AchievementController extends Controller
             'judul_kegiatan'  => 'required|string|max:200',
             'jenis_prestasi'  => 'required|in:Akademik,Non-Akademik',
             'tingkat'         => 'required|in:Lokal,Nasional,Internasional',
-            'tanggal_kegiatan'=> 'required|date',
+            'tanggal_kegiatan' => 'required|date',
             'deskripsi'       => 'nullable|string',
             'file_bukti'      => 'nullable|file|mimes:pdf|max:2048',
             'file_foto'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',

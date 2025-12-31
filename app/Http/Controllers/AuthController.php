@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
+use App\Http\Requests\StoreAuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function index()
+    {
+        return view('auth.login-page');
+    }
+
+    public function login(StoreAuthRequest $request)
     {
         $request->validate([
             'email'    => 'required|email',
@@ -23,15 +32,21 @@ class AuthController extends Controller
                 'email' => ['Email atau password salah'],
             ]);
         }
+        Auth::login($user);
+        $request->session()->regenerate();
 
         $user->tokens()->delete();
-
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ]);
+        if ($user->role === '1') {
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('token', $token);
+        }
+
+        return redirect()
+            ->route('homepage')
+            ->with('token', $token);
     }
 
     public function me(Request $request)

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\StudyProgram;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,12 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nim' => fake()->unique()->numerify('23########'),
+            'name' => fake()->name(),
+            'study_program_id' => StudyProgram::factory(),
+            'user_id' => User::factory()->state([
+                'role' => '3', // student
+            ]),
         ];
     }
 }

@@ -10,15 +10,21 @@
 
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ route('homepage') }}" class="text-gray-700 hover:text-blue-600 transition">
-                    Beranda
+                <a href="#" class="text-gray-700 hover:text-blue-600 transition">
+                    Upload Excel
                 </a>
-                <a href="{{ route('prestasi.index') }}" class="text-gray-700 hover:text-blue-600 transition">
-                    Daftar Prestasi
+                <a href="#" class="text-gray-700 hover:text-blue-600 transition">
+                    User
                 </a>
-                <a href="{{ route('login') }}" class="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
-                    Masuk
+                <a href="#" class="text-gray-700 hover:text-blue-600 transition">
+                    Program Studi
                 </a>
+                <a href="#" class="flex text-center bg-black text-white px-6 py-2 rounded-[10px] hover:bg-gray-800 transition">
+                   <i data-lucide="plus" class="h-5 w-5 text-gray-400 me-2"></i>Input Data Baru
+                </a>
+                {{-- <a href="#" class="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
+                    Prestasi
+                </a> --}}
             </div>
 
             <!-- Mobile Menu Button -->
@@ -33,9 +39,9 @@
 
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden pb-4">
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Beranda</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Daftar Prestasi</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Masuk</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Upload Excel</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">User Management</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Prestasi</a>
         </div>
     </div>
 </nav>

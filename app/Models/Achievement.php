@@ -12,15 +12,20 @@ class Achievement extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'prestasi';
-    protected $primaryKey = 'id_prestasi';
+    protected $guarded = [];
 
-    protected $guarded = []; 
-
+    public function getJenisPrestasiAttribute()
+    {
+        return match ($this->category) {
+            '1' => 'Akademik',
+            '2' => 'Non Akademik',
+            default => 'Unknown',
+        };
+    }
     // Prestasi milik satu Mahasiswa (opsional, bisa null)
     public function students(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 
     // Prestasi punya banyak komentar

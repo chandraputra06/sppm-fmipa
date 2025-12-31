@@ -10,16 +10,19 @@
 </head>
 <body class="bg-gray-50">
     <!-- Navbar Component -->
-    <x-navbar />
+    <x-navbar-admin />
+    <x-alert-error />
 
     <!-- Main Content -->
     <main>
-        @yield('content')
+        <div class="container mx-auto px-4 py-8 mt-16">
+            @yield('content')
+        </div>
     </main>
 
     <!-- Footer Component -->
-    <x-footer />
 
     @stack('scripts')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </body>
 </html>

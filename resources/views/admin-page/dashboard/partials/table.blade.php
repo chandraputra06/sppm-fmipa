@@ -1,0 +1,56 @@
+<div class="overflow-x-auto">
+    <table class="w-full border-collapse text-sm">
+        <thead>
+            <tr class="border-b text-left text-gray-500">
+                <th class="py-3">Mahasiswa</th>
+                <th class="py-3">NIM</th>
+                <th class="py-3">Program Studi</th>
+                <th class="py-3">Jenis</th>
+                <th class="py-3">Tingkat</th>
+                <th class="py-3">Tanggal</th>
+                <th class="py-3">Status</th>
+                <th class="py-3">Action</th>
+            </tr>
+        </thead>
+
+        <tbody class="divide-y">
+            @foreach ($achievements as $item)
+                <tr class="hover:bg-gray-50">
+                    <td class="py-3 flex items-center gap-3">
+                        <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=3b82f6&color=fff&size=64"
+                            alt="Budi Santoso" class="w-10 h-10 rounded-full">
+                        {{ $item->students ? $item->students->name : 'N/A' }}
+                    </td>
+                    <td class="py-3">
+                        {{ $item->students ? $item->students->nim : 'N/A' }}
+                    </td>
+                    <td class="py-3">
+                        {{ $item->students ? $item->students->studyProgram->name : 'N/A' }}
+                    </td>
+                    <td class="py-3">
+                        {{ $item->getJenisPrestasiAttribute() }}
+                    </td>
+                    <td class="py-3">
+                        {{ $item->grade }}
+                    </td>
+                    <td class="py-3">
+                        2001-01-01
+                    </td>
+                    <td class="py-3">
+                        @if ($item->is_published)
+                            <span
+                                class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">Published</span>
+                        @else
+                            <span
+                                class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">Draft</span>
+                        @endif
+                    </td>
+                    <td class="py-3 ">
+                        <a href="#" class="text-blue-600 hover:underline"> <i data-lucide="edit"
+                                class="h-5 w-5 text-gray-400"></i>
+                        </a>
+                    </td>
+            @endforeach
+        </tbody>
+    </table>
+</div>
