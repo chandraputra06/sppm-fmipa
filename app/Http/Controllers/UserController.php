@@ -18,10 +18,11 @@ class UserController extends Controller
     public function index()
     {
         $user = User::get();
-        return response()->json([
-            'message' => 'Success get data user',
-            'data' => $user,
-        ]);
+        return view('admin-page.users.index', compact('user'));
+        // return response()->json([
+        //     'message' => 'Success get data user',
+        //     'data' => $user,
+        // ]);
     }
 
     /**
