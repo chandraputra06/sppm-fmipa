@@ -6,6 +6,7 @@ use App\Models\StudyProgram;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudyProgramRequest;
 use App\Http\Requests\UpdateStudyProgramRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StudyProgramController extends Controller
@@ -13,9 +14,13 @@ class StudyProgramController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $studyPrograms = StudyProgram::get();
+        $studyPrograms = StudyProgram::when($request->filled('search'), function ($query) use ($request) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        })
+            ->get();
 
         return view('admin-page.study-programs.index', compact('studyPrograms'));
     }

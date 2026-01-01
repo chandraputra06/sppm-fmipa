@@ -11,7 +11,7 @@
         <tbody class="divide-y">
             @foreach ($studyPrograms as $studyProgram)
                 <tr class="hover:bg-gray-50">
-                    <td class="py-3">{{ $studyProgram->id }}</td>
+                    <td class="py-3">{{ $loop->iteration }}</td>
                     <td class="py-3">{{ $studyProgram->name }}</td>
                     <td class="py-3 flex items-center gap-3">
                         <a href="{{ route('study-programs.edit', $studyProgram->id) }}" class="text-blue-600 hover:underline"> <i
