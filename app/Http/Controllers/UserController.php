@@ -113,7 +113,7 @@ class UserController extends Controller
             $user->update([
                 'name'  => $request->name,
                 'email' => $request->email,
-                'role'  => $newRole,
+                'role'  =>  $request->role,
             ]);
 
             if ($oldRole != $newRole) {

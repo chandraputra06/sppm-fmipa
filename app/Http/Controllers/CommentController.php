@@ -14,7 +14,11 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::get();
+        return response()->json([
+            'data'=>$comments,
+            'message'=> 'Success get data comments'
+        ], 200);
     }
 
     /**
