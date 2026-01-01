@@ -10,7 +10,7 @@
         </thead>
 
         <tbody class="divide-y">
-            @foreach ($users as $user)
+            @forelse ($users as $user)
                 <tr class="hover:bg-gray-50">
                     <td class="py-3">{{ $user->name }}</td>
                     <td class="py-3">{{ $user->email }}</td>
@@ -29,7 +29,18 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="8" class="py-6 text-center text-sm text-gray-500">
+                        Data tidak ditemukan
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
+    {{-- Pagination --}}
+    <div class="mt-6">
+        {{ $users->links() }}
+    </div>
 </div>

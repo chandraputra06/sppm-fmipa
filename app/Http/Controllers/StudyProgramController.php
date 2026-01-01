@@ -20,7 +20,7 @@ class StudyProgramController extends Controller
             $search = $request->search;
             $query->where('name', 'like', "%{$search}%");
         })
-            ->get();
+            ->paginate(5);
 
         return view('admin-page.study-programs.index', compact('studyPrograms'));
     }
