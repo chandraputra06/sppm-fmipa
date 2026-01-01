@@ -25,7 +25,7 @@ class StudyProgramController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin-page.study-programs.create');
     }
 
     /**
@@ -39,16 +39,14 @@ class StudyProgramController extends Controller
                 'name' => $request->name
             ]);
             DB::commit();
-            return response()->json([
-                'data' => $studyProgram,
-                'message' => 'Success create study program'
-            ], 201);
+            return redirect()
+                ->route('study-programs.index')
+                ->with('success', 'Study program created successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed create study program',
-                'error' => $th->getMessage()
-            ], 400);
+            return redirect()
+                ->route('study-programs.create')
+                ->with('error', 'Failed to create study program: ' . $th->getMessage());
         }
     }
     /**
@@ -64,7 +62,7 @@ class StudyProgramController extends Controller
      */
     public function edit(StudyProgram $studyProgram)
     {
-        //
+        return view('admin-page.study-programs.edit', compact('studyProgram'));
     }
 
     /**
@@ -78,16 +76,14 @@ class StudyProgramController extends Controller
                 'name' => $request->name
             ]);
             DB::commit();
-            return response()->json([
-                'data' => $studyProgram,
-                'message' => 'Success update study program'
-            ], 201);
+            return redirect()
+                ->route('study-programs.index')
+                ->with('success', 'Study program updated successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed update study program',
-                'error' => $th->getMessage()
-            ], 400);
+            return redirect()
+                ->route('study-programs.update', $studyProgram->id)
+                ->with('error', 'Failed to updated study program: ' . $th->getMessage());
         }
     }
 
@@ -100,15 +96,14 @@ class StudyProgramController extends Controller
         try {
             $studyProgram->delete();
             DB::commit();
-            return response()->json([
-                'message' => 'Success delete study program'
-            ], 201);
+            return redirect()
+                ->route('study-programs.index')
+                ->with('success', 'Study program deleted successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed delete study program',
-                'error' => $th->getMessage()
-            ], 400);
+            return redirect()
+                ->route('study-programs.index')
+                ->with('error', 'Failed to delete study program: ' . $th->getMessage());
         }
     }
 }

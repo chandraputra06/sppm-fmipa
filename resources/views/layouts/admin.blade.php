@@ -14,6 +14,7 @@
     <!-- Navbar Component -->
     <x-navbar-admin />
     <x-alert-error />
+    <x-alert-success/>
 
     <!-- Main Content -->
     <main>
