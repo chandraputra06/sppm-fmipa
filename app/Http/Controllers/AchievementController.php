@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AchievementTemplateExport;
 use App\Models\Achievement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAchievementRequest;
 use App\Http\Requests\UpdateAchievementRequest;
+use App\Imports\AchievementImport;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AchievementController extends Controller
 {
@@ -138,5 +141,40 @@ class AchievementController extends Controller
     public function indexUpload()
     {
         return view('admin-page.prestasi.upload');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(
+            new AchievementTemplateExport,
+            'template_prestasi.xlsx'
+        );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $import = new AchievementImport();
+        Excel::import($import, $request->file('file'));
+
+        //cek eror pada baris import pada bagian headernya untuk kesesuaian data
+        if ($import->failures()->isNotEmpty()) {
+            $messages = [];
+            foreach ($import->failures() as $failure) {
+                foreach ($failure->errors() as $error) {
+                    $messages["row_{$failure->row()}_{$failure->attribute()}"] =
+                        "Baris {$failure->row()} ({$failure->attribute()}): {$error}";
+                }
+            }
+
+            return back()->withErrors($messages)->withInput();
+        }
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'Data prestasi berhasil diimport');
     }
 }
