@@ -118,9 +118,9 @@ class UserController extends Controller
             ]);
 
             if ($oldRole != $newRole) {
-                // hapus data lama
-                $user->lecture()?->delete();
-                $user->student()?->delete();
+                // hapus data lama (pakai model instance agar event deleting terpicu)
+                optional($user->lecture)->delete();
+                optional($user->student)->delete();
             }
 
             if ($newRole === 2) {
@@ -165,8 +165,8 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             //User Delete Relation
-            $user->lecture()?->delete();
-            $user->student()?->delete();
+            optional($user->lecture)->delete();
+            optional($user->student)->delete();
 
             $user->delete();
             DB::commit();

@@ -4,7 +4,7 @@
             <!-- Logo -->
             <div class="flex items-center">
                 <a href="#" class="flex items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo MIPA" class="h-10 w-auto">
+                    <img src="{{ asset('build/assets/images/logo.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
             </div>
 
@@ -19,11 +19,11 @@
                 <a href="{{ route('study-programs.index') }}" class="text-gray-700 hover:text-blue-600 transition">
                     Program Studi
                 </a>
-                <a href="#" class="flex items-center bg-white text-black px-6 py-2 rounded-[10px] transition shadow-md border-gray-300 hover:bg-gray-100">
+                <a href="{{ route('achievements.upload') }}" class="flex items-center bg-white text-black px-6 py-2 rounded-[10px] transition shadow-md border-gray-300 hover:bg-gray-100">
                     <i data-lucide="upload" class="h-4 w-4 text-gray-400 me-2"></i> Upload Excel
                 </a>
-                <a href="{{ route('achievement.create') }}" class="flex items-center bg-black text-white px-6 py-2 rounded-[10px] hover:bg-gray-800 transition">
-                   <i data-lucide="plus" class="h-5 w-5 text-gray-400 me-2"></i>Input Data Baru
+                <a href="{{ route('achievements.create') }}" class="flex items-center bg-black text-white px-6 py-2 rounded-[10px] hover:bg-gray-800 transition">
+                   <i data-lucide="plus" class="h-5 w-5 text-gray-400 me-2"></i>Input Data Prestasi
                 </a>
                 {{-- <a href="#" class="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
                     Prestasi

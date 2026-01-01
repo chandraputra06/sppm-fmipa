@@ -38,14 +38,14 @@ class AuthController extends Controller
         $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
 
-        if ($user->role === '1') {
+        if ($user->role === '3') {
             return redirect()
-                ->route('admin.dashboard')
+                ->route('homepage')
                 ->with('token', $token);
         }
 
         return redirect()
-            ->route('homepage')
+            ->route('admin.dashboard')
             ->with('token', $token);
     }
 

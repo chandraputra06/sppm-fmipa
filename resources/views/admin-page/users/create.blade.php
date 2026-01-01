@@ -1,14 +1,15 @@
 @extends('layouts.admin')
 
+@section('title', 'User Create')
+
 @section('content')
     <div class="flex items-center">
-        <a href="{{ route('users.index') }}"
-            class="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            <i data-lucide="arrow-left-to-line" class="w-5 h-5"></i>
-            <span>Back To User</span>
+
+         <a href="{{ route('users.index') }}" class="flex items-center gap-2 text-sm text-gray-600 mb-6 hover:underline">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i> Kembali
         </a>
     </div>
-    <div class="rounded-xl border border-gray-200 bg-white p-6 mt-10">
+    <div class="rounded-xl border border-gray-200 bg-white p-6">
         <h1 class="my-4">Users Create</h1>
         <form action="{{ route('users.store') }}" method="POST">
             @csrf
@@ -44,7 +45,7 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Create User</button>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm">Create User</button>
         </form>
     </div>
 @endsection
