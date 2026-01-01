@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Lecture;
 use App\Models\Student;
+use App\Models\StudyProgram;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,11 +18,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::get();
-        return response()->json([
-            'message' => 'Success get data user',
-            'data' => $user,
-        ]);
+        $users = User::get();
+        return view('admin-page.users.index', compact('users'));
+        // return response()->json([
+        //     'message' => 'Success get data user',
+        //     'data' => $user,
+        // ]);
     }
 
     /**
@@ -29,7 +31,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $studyPrograms = StudyProgram::get();
+        return view('admin-page.users.create', compact('studyPrograms'));
     }
 
     /**
@@ -47,7 +50,7 @@ class UserController extends Controller
                 'email_verified_at' => now(),
             ]);
 
-            if ($request->role == 2) {
+            if ($request->role == '2') {
                 Lecture::create([
                     'name' => $request->name,
                     'study_program_id' => $request->study_program_id,
@@ -55,7 +58,7 @@ class UserController extends Controller
                 ]);
             }
 
-            if ($request->role == 3) {
+            if ($request->role == '3') {
                 Student::create([
                     'nim' => $request->nim,
                     'name' => $request->name,
@@ -66,16 +69,14 @@ class UserController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Success create user',
-                'data' => $user,
-            ], 200);
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User created successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed create user',
-                'error' => $th->getMessage()
-            ], 400);
+            return redirect()
+                ->route('users.create')
+                ->with('error', 'Failed to create user: ' . $th->getMessage());
         }
     }
 
@@ -95,7 +96,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        $user->load(['lecture', 'student']);
+        $studyPrograms = StudyProgram::get();
+        return view('admin-page.users.edit', compact('user', 'studyPrograms'));
     }
 
     /**
@@ -105,7 +108,6 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $oldRole = (int) $user->role;
             $newRole = (int) $request->role;
 
@@ -144,16 +146,14 @@ class UserController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Success update user',
-                'data' => $user->fresh(['lecture', 'student']),
-            ], 200);
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User updated successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed update user',
-                'error' => $th->getMessage()
-            ], 400);
+            return redirect()
+                ->route('users.update', $user->id)
+                ->with('error', 'Failed to update user: ' . $th->getMessage());
         }
     }
 
@@ -170,15 +170,14 @@ class UserController extends Controller
 
             $user->delete();
             DB::commit();
-            return response()->json([
-                'message' => 'Success delete user'
-            ], 200);
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User deleted successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed delete user',
-                'error' => $th->getMessage()
-            ], 400);
+            return redirect()
+                ->route('users.index')
+                ->with('error', 'Failed to delete user: ' . $th->getMessage());
         }
     }
 }

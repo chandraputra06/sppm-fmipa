@@ -16,7 +16,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Route::resource('users', UserController::class);
 });
-Route::resource('study-programs',StudyProgramController::class);
+// Route::resource('study-programs',StudyProgramController::class);
 Route::resource('students', StudentController::class);
 Route::resource('comments', CommentController::class);
-Route::resource('users', UserController::class);

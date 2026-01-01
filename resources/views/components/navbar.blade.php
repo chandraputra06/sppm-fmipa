@@ -16,7 +16,7 @@
                 <a href="{{ route('prestasi.index') }}" class="text-gray-700 hover:text-blue-600 transition">
                     Daftar Prestasi
                 </a>
-                <a href="#" class="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
+                <a href="{{ route('login') }}" class="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
                     Masuk
                 </a>
             </div>

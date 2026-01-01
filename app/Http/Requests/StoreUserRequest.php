@@ -23,22 +23,26 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'role' => ['required', Rule::in([1, 2, 3])],
-            'study_program_id' => [
-                'nullable',
-                'exists:study_programs,id',
-                Rule::requiredIf(fn() => in_array($this->role, [2, 3])),
+            'name' => ['required', 'string'],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->whereNull('deleted_at'),
             ],
 
-            // khusus student
+            'role' => ['required', Rule::in([1, 2, 3])],
+
+            'study_program_id' => [
+                Rule::requiredIf(fn() => in_array($this->role, [2, 3])),
+                'nullable',
+                'exists:study_programs,id',
+            ],
+
             'nim' => [
+                Rule::requiredIf(fn() => $this->role == 3),
                 'nullable',
                 'string',
-                'max:20',
-                'unique:students,nim',
-                Rule::requiredIf(fn() => $this->role == 3),
+                Rule::unique('students', 'nim')->whereNull('deleted_at'),
             ],
         ];
     }

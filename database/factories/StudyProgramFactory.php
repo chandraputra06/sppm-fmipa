@@ -17,7 +17,13 @@ class StudyProgramFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->randomElement([
+                'Matematika',
+                'Fisika',
+                'Kimia',
+                'Biologi',
+                'Ilmu Komputer',
+            ]),
         ];
     }
 }
