@@ -44,6 +44,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function userRole()
+    {
+        return match ($this->role) {
+            '1' => 'Admin',
+            '2' => 'Dosen',
+            '3' => 'Mahasiswa',
+            default => 'Unknown',
+        };
+    }
+
     public function lecture()
     {
         return $this->hasOne(Lecture::class);

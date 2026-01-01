@@ -15,7 +15,7 @@ class AchievementController extends Controller
     {
         $achievements = Achievement::with('students')->orderByDesc('created_at')->paginate(10);
 
-        return view('admin-page.prestasi.index', compact('achievements'));
+        return view('admin-page.dashboard.index', compact('achievements'));
     }
 
     /**

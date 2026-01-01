@@ -10,6 +10,9 @@
 
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8">
+                <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-blue-600 transition">
+                    Dashboard
+                </a>
                 <a href="{{ route('users.index') }}" class="text-gray-700 hover:text-blue-600 transition">
                     User
                 </a>
