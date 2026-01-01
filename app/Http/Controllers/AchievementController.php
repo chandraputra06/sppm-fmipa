@@ -76,7 +76,7 @@ class AchievementController extends Controller
      */
     public function show(Achievement $achievement)
     {
-        return response()->json($achievement);
+        // return response()->json($achievement);
     }
 
     /**
