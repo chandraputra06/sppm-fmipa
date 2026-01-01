@@ -29,12 +29,8 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::get('/', [AchievementController::class, 'userHompage'])->name('homepage');
 
-
-
-Route::get('/', function () {
-    return view('homepage');
-})->name('homepage');
 
 Route::get('/prestasi', function () {
     return view('prestasi.index');
