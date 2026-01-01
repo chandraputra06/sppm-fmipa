@@ -9,22 +9,36 @@
         </thead>
 
         <tbody class="divide-y">
-            @foreach ($studyPrograms as $studyProgram)
+            @forelse ($studyPrograms as $studyProgram)
                 <tr class="hover:bg-gray-50">
                     <td class="py-3">{{ $loop->iteration }}</td>
                     <td class="py-3">{{ $studyProgram->name }}</td>
                     <td class="py-3 flex items-center gap-3">
-                        <a href="{{ route('study-programs.edit', $studyProgram->id) }}" class="text-blue-600 hover:underline"> <i
-                                data-lucide="edit" class="h-5 w-5 text-gray-400 hover:text-yellow-400"></i>
+                        <a href="{{ route('study-programs.edit', $studyProgram->id) }}"
+                            class="text-blue-600 hover:underline"> <i data-lucide="edit"
+                                class="h-5 w-5 text-gray-400 hover:text-yellow-400"></i>
                         </a>
-                        <form action="{{ route('study-programs.destroy', $studyProgram->id) }}" method="POST" class="line">
+                        <form action="{{ route('study-programs.destroy', $studyProgram->id) }}" method="POST"
+                            class="line" >
                             @csrf
                             @method('DELETE')
-                            <button type="submit"><i data-lucide="trash" class="h-5 w-5 text-gray-400 hover:text-red-400"></i></button>
+                            <button type="submit"><i data-lucide="trash"
+                                    class="h-5 w-5 text-gray-400 hover:text-red-400"></i></button>
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="8" class="py-6 text-center text-sm text-gray-500">
+                        Data tidak ditemukan
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
+    {{-- Pagination --}}
+    <div class="mt-6">
+        {{ $studyPrograms->links() }}
+    </div>
 </div>

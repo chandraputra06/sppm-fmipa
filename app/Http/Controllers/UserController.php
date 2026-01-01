@@ -28,7 +28,7 @@ class UserController extends Controller
                 $query->where('role', $request->role);
             })
             ->orderByDesc('id')
-            ->get();
+            ->paginate(5);
         return view('admin-page.users.index', compact('users'));
         // return response()->json([
         //     'message' => 'Success get data user',

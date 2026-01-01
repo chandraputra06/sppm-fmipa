@@ -32,7 +32,7 @@ class AchievementController extends Controller
                 $query->where('status', $request->status);
             })
             ->orderByDesc('date')
-            ->paginate(10)
+            ->paginate(5)
             ->withQueryString();
 
         $totalAchievements = Achievement::count();
