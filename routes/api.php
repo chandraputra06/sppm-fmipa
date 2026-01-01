@@ -17,5 +17,3 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 // Route::resource('study-programs',StudyProgramController::class);
 Route::resource('students', StudentController::class);
-
-Route::resource('users', UserController::class);
