@@ -20,3 +20,12 @@
         @include('admin-page.users.partials.table')
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.querySelector('form').submit();
+        }
+    </script>
+@endpush

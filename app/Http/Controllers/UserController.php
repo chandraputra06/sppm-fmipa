@@ -8,6 +8,7 @@ use App\Models\Lecture;
 use App\Models\Student;
 use App\Models\StudyProgram;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,9 +17,18 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::get();
+        $users = User::when($request->filled('search'), function ($query) use ($request) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })
+            ->when($request->filled('role'), function ($query) use ($request) {
+                $query->where('role', $request->role);
+            })
+            ->orderByDesc('id')
+            ->get();
         return view('admin-page.users.index', compact('users'));
         // return response()->json([
         //     'message' => 'Success get data user',

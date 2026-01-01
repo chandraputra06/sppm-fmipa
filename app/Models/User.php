@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $guarded = [];
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -47,10 +47,26 @@ class User extends Authenticatable
     public function userRole()
     {
         return match ($this->role) {
-            '1' => 'Admin',
-            '2' => 'Dosen',
-            '3' => 'Mahasiswa',
-            default => 'Unknown',
+            '1' => [
+                'label' => 'Admin',
+                'bg'    => 'bg-gray-100',
+                'text'  => 'text-gray-700',
+            ],
+            '2' => [
+                'label' => 'Dosen',
+                'bg'    => 'bg-blue-100',
+                'text'  => 'text-blue-700',
+            ],
+            '3' => [
+                'label' => 'Mahasiswa',
+                'bg'    => 'bg-green-100',
+                'text'  => 'text-green-700',
+            ],
+            default => [
+                'label' => 'Unknown',
+                'bg'    => 'bg-red-100',
+                'text'  => 'text-red-700',
+            ],
         };
     }
 
