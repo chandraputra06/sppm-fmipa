@@ -11,7 +11,7 @@ Route::get('/prestasi', function () {
     return view('prestasi.index');
 })->name('prestasi.index');
 
-Route::resource('study-programs',StudyProgramController::class);
+// Route::resource('study-programs',StudyProgramController::class);
 
 Route::get('/prestasi/{id}', function ($id) {
     return view('prestasi.show');

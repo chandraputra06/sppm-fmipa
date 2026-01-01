@@ -15,7 +15,12 @@ class AchievementController extends Controller
     {
         $achievements = Achievement::orderByDesc('created_at')->paginate(10);
 
-        return view('admin-page.prestasi.index', compact('achievements'));
+        // return view('admin-page.prestasi.index', compact('achievements'));
+        $achievements = Achievement::orderByDesc('date')->get();
+        return response()->json([
+            'data'=>$achievements,
+            'message'=>'Success get data achievements'
+        ], 200);
     }
 
     /**
@@ -23,7 +28,7 @@ class AchievementController extends Controller
      */
     public function create()
     {
-        return view('admin-page.prestasi.create');
+        // return view('admin-page.prestasi.create');
     }
 
     /**
@@ -76,7 +81,7 @@ class AchievementController extends Controller
      */
     public function show(Achievement $achievement)
     {
-        return response()->json($achievement);
+        // return response()->json($achievement);
     }
 
     /**
@@ -84,7 +89,7 @@ class AchievementController extends Controller
      */
     public function edit(Achievement $achievement)
     {
-        return view('admin-page.prestasi.edit', compact('achievement'));
+        // return view('admin-page.prestasi.edit', compact('achievement'));
     }
 
     /**
