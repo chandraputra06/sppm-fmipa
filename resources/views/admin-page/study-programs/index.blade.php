@@ -1,5 +1,20 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>halaman study program</h1>
+     <div class="rounded-xl border border-gray-200 bg-white p-6 mt-10">
+        <div class="mb-6 flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">
+                Program Studi
+            </h1>
+            <a href="{{ route('study-programs.create') }}"
+                class="flex items-center rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                <i data-lucide="plus" class="h-5 w-5 text-white-400 me-2"></i>Create New
+            </a>
+        </div>
+        {{-- Search & Filter --}}
+        @include('admin-page.study-programs.partials.filter')
+
+        {{-- Table --}}
+        @include('admin-page.study-programs.partials.table')
+    </div>
 @endsection
