@@ -6,11 +6,13 @@ use App\Models\Achievement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAchievementRequest;
 use App\Http\Requests\UpdateAchievementRequest;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AchievementController extends Controller
 {
-
     public function index()
     {
         $achievements = Achievement::with('students')->orderByDesc('created_at')->paginate(10);
@@ -23,52 +25,37 @@ class AchievementController extends Controller
      */
     public function create()
     {
-        // return view('admin-page.prestasi.create');
+        $students = Student::all();
+        return view('admin-page.prestasi.create', compact('students'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAchievementRequest $request)
     {
-        $request->validate([
-            'nim_mahasiswa'   => 'nullable|string|max:20',
-            'nama_mahasiswa'  => 'required|string|max:100',
-            'program_studi'   => 'required|string|max:50',
-            'judul_kegiatan'  => 'required|string|max:200',
-            'jenis_prestasi'  => 'required|in:Akademik,Non-Akademik',
-            'tingkat'         => 'required|in:Lokal,Nasional,Internasional',
-            'tanggal_kegiatan' => 'required|date',
-            'deskripsi'       => 'nullable|string',
-            'file_bukti'      => 'nullable|file|mimes:pdf|max:2048',
-            'file_foto'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        DB::beginTransaction();
+        try {
+            $data = $request->only(['title', 'category', 'grade', 'date', 'description', 'status', 'student_id']);
 
-        $data = $request->only([
-            'nim_mahasiswa',
-            'nama_mahasiswa',
-            'program_studi',
-            'judul_kegiatan',
-            'jenis_prestasi',
-            'tingkat',
-            'tanggal_kegiatan',
-            'deskripsi',
-        ]);
+            if ($request->hasFile('proof')) {
+                $data['proof'] = $request->file('proof')->store('achievements/proofs', 'public');
+            }
 
-        if ($request->hasFile('file_bukti')) {
-            $data['file_bukti'] = $request->file('file_bukti')->store('bukti', 'public');
+            if ($request->hasFile('photo')) {
+                $data['photo'] = $request->file('photo')->store('achievements/photos', 'public');
+            }
+
+            Achievement::create($data);
+
+            DB::commit();
+            return redirect()->route('admin.dashboard')->with('success', 'Achievement created successfully');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()
+                ->route('achievements.create')
+                ->with('error', 'Failed to create achievement: ' . $th->getMessage());
         }
-
-        if ($request->hasFile('file_foto')) {
-            $data['file_foto'] = $request->file('file_foto')->store('foto', 'public');
-        }
-
-        $achievement = Achievement::create($data);
-
-        return response()->json([
-            'message'  => 'Prestasi berhasil dibuat',
-            'data'     => $achievement,
-        ], 201);
     }
 
     /**
@@ -84,7 +71,9 @@ class AchievementController extends Controller
      */
     public function edit(Achievement $achievement)
     {
-        // return view('admin-page.prestasi.edit', compact('achievement'));
+        $students = Student::orderBy('name')->get();
+        $achievement->load('students');
+        return view('admin-page.prestasi.edit', compact('achievement', 'students'));
     }
 
     /**
@@ -92,44 +81,33 @@ class AchievementController extends Controller
      */
     public function update(UpdateAchievementRequest $request, Achievement $achievement)
     {
-        $request->validate([
-            'nim_mahasiswa'   => 'nullable|string|max:20',
-            'nama_mahasiswa'  => 'required|string|max:100',
-            'program_studi'   => 'required|string|max:50',
-            'judul_kegiatan'  => 'required|string|max:200',
-            'jenis_prestasi'  => 'required|in:Akademik,Non-Akademik',
-            'tingkat'         => 'required|in:Lokal,Nasional,Internasional',
-            'tanggal_kegiatan' => 'required|date',
-            'deskripsi'       => 'nullable|string',
-            'file_bukti'      => 'nullable|file|mimes:pdf|max:2048',
-            'file_foto'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        DB::beginTransaction();
+        try {
+            $data = $request->only(['title', 'category', 'grade', 'date', 'description', 'status', 'student_id']);
 
-        $data = $request->only([
-            'nim_mahasiswa',
-            'nama_mahasiswa',
-            'program_studi',
-            'judul_kegiatan',
-            'jenis_prestasi',
-            'tingkat',
-            'tanggal_kegiatan',
-            'deskripsi',
-        ]);
+            if ($request->hasFile('proof')) {
+                if ($achievement->proof) {
+                    Storage::disk('public')->delete($achievement->proof);
+                }
+                $data['proof'] = $request->file('proof')->store('achievements/proofs', 'public');
+            }
 
-        if ($request->hasFile('file_bukti')) {
-            $data['file_bukti'] = $request->file('file_bukti')->store('bukti', 'public');
+            if ($request->hasFile('photo')) {
+                if ($achievement->photo) {
+                    Storage::disk('public')->delete($achievement->photo);
+                }
+                $data['photo'] = $request->file('photo')->store('achievements/photos', 'public');
+            }
+
+            $achievement->update($data);
+            DB::commit();
+            return redirect()->route('admin.dashboard')->with('success', 'Achievement updated successfully.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()
+                ->route('achievements.edit', $achievement->id)
+                ->with('error', 'Failed to edit achievement: ' . $th->getMessage());
         }
-
-        if ($request->hasFile('file_foto')) {
-            $data['file_foto'] = $request->file('file_foto')->store('foto', 'public');
-        }
-
-        $achievement->update($data);
-
-        return response()->json([
-            'message'  => 'Prestasi berhasil diperbarui',
-            'data'     => $achievement,
-        ]);
     }
 
     /**
@@ -137,11 +115,24 @@ class AchievementController extends Controller
      */
     public function destroy(Achievement $achievement)
     {
-        $achievement->delete();
+        try {
+            if ($achievement->proof) {
+                Storage::disk('public')->delete($achievement->proof);
+            }
 
-        return response()->json([
-            'message' => 'Prestasi berhasil dihapus',
-        ]);
+            if ($achievement->photo) {
+                Storage::disk('public')->delete($achievement->photo);
+            }
+
+            $achievement->delete();
+
+            return redirect()->route('admin.dashboard')->with('success', 'Achievement deleted successfully.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()
+                ->route('achievements.edit', $achievement->id)
+                ->with('error', 'Failed to delete achievement: ' . $th->getMessage());
+        }
     }
 
     public function indexUpload()
