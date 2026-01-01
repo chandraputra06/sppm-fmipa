@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
@@ -34,7 +35,24 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $comments = Comment::create([
+                'content'=>$request->content,
+                'user_id'=>$request->user_id,
+            ]);
+            DB::commit();
+            return response()->json([
+                'data'=>$comments,
+                'message'=>'Success create comment'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed create comment',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -58,7 +76,23 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $comment->update([
+                'content'=>$request->content,
+            ]);
+            DB::commit();
+            return response()->json([
+                'data'=>$comment,
+                'message'=>'Success update comment'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed update comment',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -66,6 +100,19 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $comment->delete();
+            DB::commit();
+            return response()->json([
+                'message'=>'Success delete comment'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message'=>'Failed delete comment',
+                'error'=>$th->getMessage()
+            ], 400);
+        }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudyProgramController;
 use App\Http\Controllers\UserController;
@@ -17,4 +18,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::resource('study-programs',StudyProgramController::class);
 Route::resource('students', StudentController::class);
+Route::resource('comments', CommentController::class);
 Route::resource('users', UserController::class);

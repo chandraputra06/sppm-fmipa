@@ -10,4 +10,6 @@ class Comment extends Model
 {
     /** @use HasFactory<\Database\Factories\CommentFactory> */
     use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
 }
