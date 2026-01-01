@@ -18,7 +18,7 @@ class CommentController extends Controller
         $comments = Comment::get();
         return response()->json([
             'data'=>$comments,
-            'message'=>'Success get data comments'
+            'message'=> 'Success get data comments'
         ], 200);
     }
 

@@ -15,12 +15,13 @@ class AchievementController extends Controller
     {
         $achievements = Achievement::orderByDesc('created_at')->paginate(10);
 
-        // return view('admin-page.prestasi.index', compact('achievements'));
-        $achievements = Achievement::orderByDesc('date')->get();
+        $achievements = Achievement::get();
         return response()->json([
-            'data'=>$achievements,
-            'message'=>'Success get data achievements'
-        ], 200);
+            'message' => 'Success get data user',
+            'data' => $achievements,
+        ]);
+
+        // return view('admin-page.prestasi.index', compact('achievements'));
     }
 
     /**

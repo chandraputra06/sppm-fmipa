@@ -16,4 +16,3 @@ Route::get('/prestasi', function () {
 Route::get('/prestasi/{id}', function ($id) {
     return view('prestasi.show');
 })->name('prestasi.show');
-
