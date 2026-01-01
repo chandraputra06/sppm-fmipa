@@ -1,7 +1,7 @@
 <div class="overflow-x-auto">
     <table class="w-full border-collapse text-sm">
         <thead>
-            <tr class="border-b text-left text-gray-500 text-center">
+            <tr class="border-b text-gray-500 text-center">
                 <th class="py-3">Title</th>
                 <th class="py-3">NIM</th>
                 <th class="py-3">Program Studi</th>

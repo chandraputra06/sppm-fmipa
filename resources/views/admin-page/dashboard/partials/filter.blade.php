@@ -3,27 +3,19 @@
 
     {{-- Search --}}
     <div class="relative w-full">
-        {{-- Search Icon --}}
         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <i data-lucide="search" class="h-4 w-4"></i>
         </span>
 
-        {{-- Clear Button --}}
-     <button type="button"
-    onclick="clearSearch()"
-    class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600">
-    <i data-lucide="x" class="h-4 w-4"></i>
-</button>
+        <button type="button" onclick="clearSearch()"
+            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="h-4 w-4"></i>
+        </button>
 
-        <input
-            id="search-input"
-            name="search"
-            type="text"
-            value="{{ request('search') }}"
+        <input id="search-input" name="search" type="text" value="{{ request('search') }}"
             placeholder="Cari nama, NIM, atau kegiatan..."
             class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-10 text-sm
-                   focus:border-blue-500 focus:outline-none"
-        />
+                   focus:border-blue-500 focus:outline-none" />
     </div>
 
     {{-- Status --}}
@@ -41,4 +33,3 @@
         </option>
     </select>
 </form>
-
