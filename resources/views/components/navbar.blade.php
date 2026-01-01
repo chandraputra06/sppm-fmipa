@@ -3,8 +3,8 @@
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex items-center">
-                <a href="#" class="flex items-center">
-                    <img src="{{ asset('build/images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
+                <a href="{{ route('homepage') }}" class="flex items-center">
+                    <img src="{{ asset('build/images/logo.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
             </div>
 
