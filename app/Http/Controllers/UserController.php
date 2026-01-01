@@ -50,7 +50,7 @@ class UserController extends Controller
                 'email_verified_at' => now(),
             ]);
 
-            if ($request->role == 2) {
+            if ($request->role == '2') {
                 Lecture::create([
                     'name' => $request->name,
                     'study_program_id' => $request->study_program_id,
@@ -58,7 +58,7 @@ class UserController extends Controller
                 ]);
             }
 
-            if ($request->role == 3) {
+            if ($request->role == '3') {
                 Student::create([
                     'nim' => $request->nim,
                     'name' => $request->name,
@@ -108,7 +108,6 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $oldRole = (int) $user->role;
             $newRole = (int) $request->role;
 

@@ -42,7 +42,7 @@
             {{-- NIM --}}
             <div class="mb-4" id="nim-wrapper">
                 <label class="block text-gray-700">NIM</label>
-                <input type="text" name="nim" class="w-full border rounded px-3 py-2"
+                <input type="number" name="nim" class="w-full border rounded px-3 py-2"
                     value="{{ old('nim', $user->student->nim ?? '') }}">
             </div>
 
