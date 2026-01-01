@@ -143,4 +143,9 @@ class AchievementController extends Controller
             'message' => 'Prestasi berhasil dihapus',
         ]);
     }
+
+    public function indexUpload()
+    {
+        return view('admin-page.prestasi.upload');
+    }
 }

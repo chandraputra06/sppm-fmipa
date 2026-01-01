@@ -14,11 +14,11 @@
     <!-- Navbar Component -->
     <x-navbar-admin />
     <x-alert-error />
-    <x-alert-success/>
+    <x-alert-success />
 
     <!-- Main Content -->
     <main>
-        <div class="container mx-auto px-4 py-8 mt-16">
+        <div class="container max-w-5xl mx-auto px-6 px-lg-1 py-10 mt-16">
             @yield('content')
         </div>
     </main>
