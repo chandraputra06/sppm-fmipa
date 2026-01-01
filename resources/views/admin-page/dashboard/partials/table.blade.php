@@ -17,22 +17,22 @@
             @forelse ($achievements as $item)
                 <tr class="hover:bg-gray-50">
                     <td class="py-3 flex items-center gap-3">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(optional($item->students)->name ?? 'N/A') }}&background=3b82f6&color=fff&size=64"
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($item->students->name ?? 'N/A') }}&background=3b82f6&color=fff&size=64"
                             class="w-10 h-10 rounded-full">
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-900">
                                 {{ $item->title ?? 'N/A' }}
                             </span>
                             <span class="text-xs text-gray-500">
-                                {{ optional($item->students)->name ?? 'N/A' }}
+                                {{ $item->students->name ?? 'N/A' }}
                             </span>
                         </div>
                     </td>
                     <td class="py-3 text-center">
-                        {{ optional($item->students)->nim ?? 'N/A' }}
+                        {{ $item->students->nim ?? 'N/A' }}
                     </td>
                     <td class="py-3 text-center">
-                        {{ optional($item->students?->studyProgram)->name ?? 'N/A' }}
+                        {{ $item->students?->studyProgram->name ?? 'N/A' }}
                     </td>
                     <td class="py-3 text-center">
                         <span

@@ -196,4 +196,15 @@ class AchievementController extends Controller
             ->route('admin.dashboard')
             ->with('success', 'Data prestasi berhasil diimport');
     }
+
+    public function userHompage()
+    {
+        $achievements = Achievement::with('students')
+            ->where('status', 'Publish')
+            ->orderByDesc('date')
+            ->limit('3')
+            ->get();
+
+        return view('homepage', compact('achievements'));
+    }
 }
