@@ -12,18 +12,6 @@
 
     <div class="rounded-xl border border-gray-200 bg-white p-6">
         <h1 class="my-4 text-lg font-semibold">Edit Prestasi</h1>
-
-        {{-- ALERT ERROR --}}
-        @if ($errors->any())
-            <div class="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form action="{{ route('achievements.update', $achievement->id) }}"
               method="POST"
               enctype="multipart/form-data">
@@ -66,11 +54,8 @@
             {{-- Tanggal --}}
             <div class="mb-4">
                 <label class="block text-gray-700">Tanggal Prestasi</label>
-                <input type="date"
-                       name="date"
-                       value="{{ old('date', $achievement->date) }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2"
-                       required>
+                <input type="date" name="date" value="{{ old('date', $achievement->date?->format('Y-m-d')) }}"
+                class="w-full border border-gray-300 rounded px-3 py-2" required>
             </div>
 
             {{-- Kategori --}}

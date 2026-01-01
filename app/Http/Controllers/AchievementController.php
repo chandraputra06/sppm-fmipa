@@ -16,11 +16,30 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class AchievementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $achievements = Achievement::with('students')->orderByDesc('created_at')->paginate(10);
+        $achievements = Achievement::with('students')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->search;
 
-        return view('admin-page.dashboard.index', compact('achievements'));
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhereHas('students', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    });
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $query->where('status', $request->status);
+            })
+            ->orderByDesc('date')
+            ->paginate(10)
+            ->withQueryString();
+
+        $totalAchievements = Achievement::count();
+        $totalAchievementyear = Achievement::whereYear('date', now()->year)->count();
+        $totalPublished = Achievement::where('status', 'Publish')->count();
+        $totalVerified = Achievement::where('status', 'Verified')->count();
+        return view('admin-page.dashboard.index', compact('achievements', 'totalAchievements', 'totalAchievementyear', 'totalPublished', 'totalVerified'));
     }
 
     /**
