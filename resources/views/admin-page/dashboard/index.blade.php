@@ -13,7 +13,7 @@
 
             <div class="mt-4">
                 <p class="text-3xl font-bold text-blue-600">
-                    8
+                    {{ $totalAchievements }}
                 </p>
                 <p class="mt-1 text-sm text-gray-500">
                     Semua data prestasi
@@ -32,7 +32,7 @@
 
             <div class="mt-4">
                 <p class="text-3xl font-bold text-green-600">
-                    0
+                    {{ $totalAchievementyear }}
                 </p>
                 <p class="mt-1 text-sm text-gray-500">
                     Data tahun {{ now()->year }}
@@ -51,7 +51,7 @@
 
             <div class="mt-4">
                 <p class="text-3xl font-bold text-indigo-600">
-                    6
+                    {{ $totalPublished }}
                 </p>
                 <p class="mt-1 text-sm text-gray-500">
                     Dapat dilihat publik
@@ -71,7 +71,7 @@
 
             <div class="mt-4">
                 <p class="text-3xl font-bold text-red-600">
-                    2
+                    {{ $totalVerified }}
                 </p>
                 <p class="mt-1 text-sm text-gray-500">
                     Perlu ditinjau
@@ -91,3 +91,12 @@
         @include('admin-page.dashboard.partials.table')
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.querySelector('form').submit();
+        }
+    </script>
+@endpush

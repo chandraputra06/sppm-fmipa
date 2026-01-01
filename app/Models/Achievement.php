@@ -14,6 +14,10 @@ class Achievement extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function getJenisPrestasiAttribute()
     {
         return match ($this->category) {
@@ -22,6 +26,7 @@ class Achievement extends Model
             default => 'Unknown',
         };
     }
+
     // Prestasi milik satu Mahasiswa (opsional, bisa null)
     public function students(): BelongsTo
     {
