@@ -6,6 +6,9 @@ use App\Models\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Models\Achievement;
+use App\Models\StudyProgram;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
@@ -16,10 +19,13 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::get();
-        return response()->json([
-            'data'=>$students,
-            'message'=>'Success get data students'
-        ], 200);
+        return response()->json(
+            [
+                'data' => $students,
+                'message' => 'Success get data students',
+            ],
+            200,
+        );
         // return view('admin-page.students.index', compact('students'));
     }
 
@@ -39,22 +45,28 @@ class StudentController extends Controller
         DB::beginTransaction();
         try {
             $students = Student::create([
-                'nim'=>$request->nim,
-                'name'=>$request->name,
-                'study_program_id'=>$request->study_program_id,
-                'user_id'=>$request->user_id,
+                'nim' => $request->nim,
+                'name' => $request->name,
+                'study_program_id' => $request->study_program_id,
+                'user_id' => $request->user_id,
             ]);
             DB::commit();
-            return response()->json([
-                'data'=>$students,
-                'message'=>'Success create student'
-            ], 201);
+            return response()->json(
+                [
+                    'data' => $students,
+                    'message' => 'Success create student',
+                ],
+                201,
+            );
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message'=>'Failed create student',
-                'error'=>$th->getMessage()
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Failed create student',
+                    'error' => $th->getMessage(),
+                ],
+                400,
+            );
         }
     }
 
@@ -63,7 +75,22 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $student->load(['studyProgram']);
+
+        $achievementsByYear = Achievement::where('student_id', $student->id)
+            ->orderByDesc('date')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->date->year;
+            });
+
+        $achievementCount = Achievement::where('student_id', $student->id)->count();
+
+        $achievementNasional = Achievement::where('student_id', $student->id)->where('grade', 'Nasional')->count();
+
+        $achievementInternasional = Achievement::where('student_id', $student->id)->where('grade', 'Internasional')->count();
+
+        return view('prestasi.show', compact('student', 'achievementsByYear', 'achievementInternasional', 'achievementNasional', 'achievementCount'));
     }
 
     /**
@@ -82,22 +109,28 @@ class StudentController extends Controller
         DB::beginTransaction();
         try {
             $student->update([
-                'nim'=>$request->nim,
-                'name'=>$request->name,
-                'study_program_id'=>$request->study_program_id,
-                'user_id'=>$request->user_id,
+                'nim' => $request->nim,
+                'name' => $request->name,
+                'study_program_id' => $request->study_program_id,
+                'user_id' => $request->user_id,
             ]);
             DB::commit();
-            return response()->json([
-                'data'=>$student,
-                'message'=>'Success update student'
-            ], 201);
+            return response()->json(
+                [
+                    'data' => $student,
+                    'message' => 'Success update student',
+                ],
+                201,
+            );
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message'=>'Failed update student',
-                'error'=>$th->getMessage()
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Failed update student',
+                    'error' => $th->getMessage(),
+                ],
+                400,
+            );
         }
     }
 
@@ -110,15 +143,56 @@ class StudentController extends Controller
         try {
             $student->delete();
             DB::commit();
-            return response()->json([
-                'message'=>'Success delete student'
-            ], 201);
+            return response()->json(
+                [
+                    'message' => 'Success delete student',
+                ],
+                201,
+            );
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message'=>'Failed delete student',
-                'error'=>$th->getMessage()
-            ], 400);
+            return response()->json(
+                [
+                    'message' => 'Failed delete student',
+                    'error' => $th->getMessage(),
+                ],
+                400,
+            );
         }
+    }
+
+    public function studentAchievements(Request $request)
+    {
+        // dd($request->all());
+        $studyPrograms = StudyProgram::get();
+        $perPage = $request->input('per_page', 5);
+
+        $students = Student::with([
+            'studyProgram',
+            'achievements'
+        ])
+            ->when($request->filled('grade'), function ($q) use ($request) {
+                $q->whereHas('achievements', function ($achievement) use ($request) {
+                    $achievement->where('grade', $request->grade);
+                });
+            })
+            ->when($request->filled('year'), function ($q) use ($request) {
+                $q->whereHas('achievements', function ($achievement) use ($request) {
+                    $achievement->whereYear('date', $request->year);
+                });
+            })
+            ->when($request->filled('study_program'), function ($q) use ($request) {
+                $q->whereHas('studyProgram', function ($sp) use ($request) {
+                    $sp->where('id', $request->study_program);
+                });
+            })
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $search = $request->search;
+                $q->where('name', 'like', "%{$search}%")->orWhere('nim', 'like', "%{$search}%");
+            })
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return view('prestasi.index', compact('students', 'studyPrograms'));
     }
 }

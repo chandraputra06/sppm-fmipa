@@ -33,9 +33,9 @@
 
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden pb-4">
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Beranda</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Daftar Prestasi</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Masuk</a>
+            <a href="{{ route('homepage') }}" class="block py-2 text-gray-700 hover:text-blue-600">Beranda</a>
+            <a href="{{ route('prestasi.index') }}" class="block py-2 text-gray-700 hover:text-blue-600">Daftar Prestasi</a>
+            <a href="{{ route('login') }}" class="block py-2 text-gray-700 hover:text-blue-600">Masuk</a>
         </div>
     </div>
 </nav>
