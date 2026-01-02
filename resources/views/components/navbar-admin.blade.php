@@ -4,7 +4,7 @@
             <!-- Logo -->
             <div class="flex items-center">
                 <a href="{{ route('homepage') }}" class="flex items-center">
-                    <img src="{{ asset('build/assets/images/logo.png') }}" alt="Logo MIPA" class="h-10 w-auto">
+                    <img src="{{ asset('images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
             </div>
 
@@ -25,9 +25,6 @@
                 <a href="{{ route('achievements.create') }}" class="flex items-center bg-black text-white px-6 py-2 rounded-[10px] hover:bg-gray-800 transition">
                    <i data-lucide="plus" class="h-5 w-5 text-gray-400 me-2"></i>Input Data Prestasi
                 </a>
-                {{-- <a href="#" class="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
-                    Prestasi
-                </a> --}}
             </div>
 
             <!-- Mobile Menu Button -->
@@ -42,9 +39,11 @@
 
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden pb-4">
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Upload Excel</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">User Management</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Prestasi</a>
+            <a href="{{ route('admin.dashboard') }}" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
+            <a href="{{ route('users.index') }}" class="block py-2 text-gray-700 hover:text-blue-600">User</a>
+            <a href="{{ route('study-programs.index') }}" class="block py-2 text-gray-700 hover:text-blue-600">Program Studi</a>
+            <a href="{{ route('achievements.upload') }}" class="block py-2 text-gray-700 hover:text-blue-600">Upload Excel</a>
+            <a href="{{ route('achievements.create') }}" class="block py-2 text-gray-700 hover:text-blue-600">Input Data Prestasi</a>
         </div>
     </div>
 </nav>
