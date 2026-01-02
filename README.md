@@ -11,7 +11,7 @@ Aplikasi Laravel 12 untuk menampilkan dan mengelola prestasi mahasiswa FMIPA. Pu
 
 ### Prasyarat
 
--   PHP 8.2+, Composer
+-   PHP 8.4, Composer
 -   Node.js 18+ dan npm
 -   Database yang didukung Laravel (MySQL/PostgreSQL/dll)
 
