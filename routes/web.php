@@ -7,10 +7,12 @@ use App\Http\Controllers\StudyProgramController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/authenticate', [AuthController::class, 'login'])->name('auth.login');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::post('/authenticate', [AuthController::class, 'login'])->name('auth.login');
+});
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:1,2'])->prefix('admin')->group(function () {
     Route::get('dashboard', [AchievementController::class, 'index'])->name('admin.dashboard');
 
     Route::resource('study-programs', StudyProgramController::class);
@@ -30,6 +32,10 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/prestasi', [StudentController::class, 'studentAchievements'])->name('prestasi.index');
+    Route::get('/prestasi/{student}', [StudentController::class, 'show'])->name('prestasi.show');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 Route::get('/', [AchievementController::class, 'userHompage'])->name('homepage');
-Route::get('/prestasi', [StudentController::class, 'studentAchievements'])->name('prestasi.index');
-Route::get('/prestasi/{student}', [StudentController::class, 'show'])->name('prestasi.show');
