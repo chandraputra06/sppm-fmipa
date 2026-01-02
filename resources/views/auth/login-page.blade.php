@@ -5,8 +5,8 @@
 @section('content')
     <div class="min-h-screen flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <a href="#" class="flex items-center justify-center mb-6">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo MIPA" class="h-10 w-auto">
+            <a href="{{ route('homepage') }}" class="flex items-center justify-center mb-6">
+                <img src="{{ asset('images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
             </a>
             <h2 class="text-2xl font-bold mb-6 text-center">Masuk ke Akun Anda</h2>
             <form method="POST" action="{{ route('auth.login') }}">
