@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudyProgramController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,14 +31,5 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::get('/', [AchievementController::class, 'userHompage'])->name('homepage');
-
-
-Route::get('/prestasi', function () {
-    return view('prestasi.index');
-})->name('prestasi.index');
-
-// Route::resource('study-programs', StudyProgramController::class);
-
-Route::get('/prestasi/{id}', function ($id) {
-    return view('prestasi.show');
-})->name('prestasi.show');
+Route::get('/prestasi', [StudentController::class, 'studentAchievements'])->name('prestasi.index');
+Route::get('/prestasi/{student}', [StudentController::class, 'show'])->name('prestasi.show');
