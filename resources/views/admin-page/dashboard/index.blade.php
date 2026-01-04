@@ -95,8 +95,12 @@
 @push('scripts')
     <script>
         function clearSearch() {
-            document.getElementById('search-input').value = '';
-            document.querySelector('form').submit();
+            const input = document.getElementById('search-input');
+            if (!input) return;
+
+            input.value = '';
+            const form = input.closest('form');
+            if (form) form.submit();
         }
     </script>
 @endpush
