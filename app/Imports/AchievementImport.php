@@ -11,12 +11,19 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class AchievementImport implements
     ToModel,
     WithHeadingRow,
     WithValidation,
-    SkipsOnFailure
+    SkipsOnFailure,
+    SkipsEmptyRows,
+    WithBatchInserts,
+    WithChunkReading
 {
     use SkipsFailures;
 
@@ -26,13 +33,9 @@ class AchievementImport implements
     public function model(array $row)
     {
         // cari mahasiswa berdasarkan nim yang terdaftar karena nim itu unik
-        $student = Student::where('nim', trim($row['nim']))->first();
+        $nim = trim((string) $row['nim']);
 
-        if (!$student) {
-            throw ValidationException::withMessages([
-                'nim' => "NIM {$row['nim']} tidak ditemukan",
-            ]);
-        }
+        $student = Student::where('nim', $nim)->first();
 
         // set up jenis prestasi untuk pilihan enum
         $category = match (strtolower($row['jenis_prestasi'])) {
@@ -50,16 +53,22 @@ class AchievementImport implements
         // set up tingkat prestasi yang di pilih
         $grade = ucfirst(strtolower($row['tingkat']));
 
-        if (!in_array($grade, ['Fakultas', 'Universitas', 'Nasional', 'Internasional'])) {
+        if (!in_array($grade, ['Lokal', 'Nasional', 'Internasional'])) {
             throw ValidationException::withMessages([
                 'tingkat' => "Tingkat tidak valid: {$row['tingkat']}",
             ]);
         }
 
-        // parsing tanggal dari format DD/MM/YYYY ke Y-m-d
+        // parsing tanggal dari format DD/MM/YYYY atau serial Excel ke Y-m-d
         try {
-            $date = Carbon::createFromFormat('d/m/Y', $row['tanggal_perolehan'])
-                ->format('Y-m-d');
+            $rawDate = $row['tanggal_perolehan'];
+
+            if (is_numeric($rawDate)) {
+                // Excel menyimpan tanggal sebagai serial number
+                $date = ExcelDate::excelToDateTimeObject($rawDate)->format('Y-m-d');
+            } else {
+                $date = Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+            }
         } catch (\Throwable $e) {
             throw ValidationException::withMessages([
                 'tanggal_perolehan' => "Format tanggal salah (DD/MM/YYYY)",
@@ -80,11 +89,31 @@ class AchievementImport implements
     public function rules(): array
     {
         return [
-            '*.nim' => ['required'],
-            '*.jenis_prestasi' => ['required'],
+            '*.nim' => ['required', 'exists:students,nim'],
+            '*.jenis_prestasi' => ['required', function ($attribute, $value, $fail) {
+                $normalized = strtolower(trim((string) $value));
+                if (!in_array($normalized, ['akademik', 'non akademik', 'non-akademik'])) {
+                    $fail('Jenis Prestasi harus Akademik atau Non Akademik');
+                }
+            }],
             '*.nama_kegiatan' => ['required'],
-            '*.tingkat' => ['required'],
-            '*.tanggal_perolehan' => ['required'],
+            '*.tingkat' => ['required', function ($attribute, $value, $fail) {
+                $allowed = ['lokal', 'nasional', 'internasional'];
+                if (!in_array(strtolower(trim((string) $value)), $allowed)) {
+                    $fail('Tingkat harus Lokal / Nasional / Internasional');
+                }
+            }],
+            '*.tanggal_perolehan' => ['required', function ($attribute, $value, $fail) {
+                if (is_numeric($value)) {
+                    return;
+                }
+
+                try {
+                    Carbon::createFromFormat('d/m/Y', (string) $value);
+                } catch (\Throwable $e) {
+                    $fail('Format tanggal salah (DD/MM/YYYY)');
+                }
+            }],
         ];
     }
 
@@ -92,7 +121,18 @@ class AchievementImport implements
     {
         return [
             'nim.required' => 'NIM wajib diisi',
+            'nim.exists' => 'NIM tidak ditemukan di data mahasiswa',
             'nama_kegiatan.required' => 'Nama kegiatan wajib diisi',
         ];
+    }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+
+    public function chunkSize(): int
+    {
+        return 100;
     }
 }
