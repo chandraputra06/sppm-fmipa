@@ -23,7 +23,7 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @forelse ($achievements as $item)
-                    <a href="{{ route('prestasi.show', $item->id) }}">
+                    <a href="{{ route('prestasi.show', $item->students->id) }}">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
                             <!-- Image Placeholder -->
                             <div class="h-48 bg-gray-300 flex items-center justify-center">
