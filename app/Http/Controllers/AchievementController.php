@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Exports\AchievementTemplateExport;
+use App\Exports\ReportAchievementExport;
 use App\Models\Achievement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAchievementRequest;
 use App\Http\Requests\UpdateAchievementRequest;
 use App\Imports\AchievementImport;
 use App\Models\Student;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -206,5 +208,16 @@ class AchievementController extends Controller
             ->get();
 
         return view('homepage', compact('achievements'));
+    }
+
+    public function exportReport()
+    {
+        $endDate   = Carbon::now();
+        $startDate = Carbon::now()->subMonths(3);
+
+        return Excel::download(
+            new ReportAchievementExport,
+            "report_prestasi_{$startDate->format('M-Y')}_sd_{$endDate->format('M-Y')}.xlsx"
+        );
     }
 }

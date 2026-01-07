@@ -80,9 +80,15 @@
         </div>
     </div>
     <div class="rounded-xl border border-gray-200 bg-white p-6 mt-10">
-        <h2 class="mb-4 text-lg font-semibold text-gray-800">
-            Data Prestasi Mahasiswa
-        </h2>
+        <div class="mb-6 flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">
+                 Data Prestasi Mahasiswa
+            </h1>
+            <a href="{{ route('achievements.exportReport') }}"
+                class="flex items-center rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm">
+                <i data-lucide="file-text" class="h-5 w-5 text-white-400 me-1"></i>Report Triwulan
+            </a>
+        </div>
 
         {{-- Search & Filter --}}
         @include('admin-page.dashboard.partials.filter')

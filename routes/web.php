@@ -29,6 +29,7 @@ Route::middleware(['auth', 'role:1,2'])->prefix('admin')->group(function () {
         Route::get('upload', [AchievementController::class, 'indexUpload'])->name('achievements.upload');
         Route::post('import', [AchievementController::class, 'import'])->name('achievements.import');
         Route::get('download-template', [AchievementController::class, 'downloadTemplate'])->name('achievements.downloadTemplate');
+        Route::get('report-achievement', [AchievementController::class, 'exportReport'])->name('achievements.exportReport');
     });
 });
 
