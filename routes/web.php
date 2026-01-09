@@ -36,6 +36,8 @@ Route::middleware(['auth', 'role:1,2'])->prefix('admin')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/prestasi', [StudentController::class, 'studentAchievements'])->name('prestasi.index');
     Route::get('/prestasi/{student}', [StudentController::class, 'show'])->name('prestasi.show');
+
+    Route::get('/profile/{user}', [UserController::class, 'profile'])->name('profile.show');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');

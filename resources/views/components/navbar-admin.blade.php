@@ -7,6 +7,7 @@
                     <img src="{{ asset('images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
                 @auth
+                <a href="{{ route('profile.show', auth()->user()->id ) }}">
                     @php
                         $roleMeta = auth()->user()->userRole();
                     @endphp
@@ -19,7 +20,7 @@
                         </div>
 
                     </div>
-
+                </a>
                 @endauth
             </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Achievement;
 use App\Models\Lecture;
 use App\Models\Student;
 use App\Models\StudyProgram;
@@ -88,17 +89,6 @@ class UserController extends Controller
                 ->route('users.create')
                 ->with('error', 'Failed to create user: ' . $th->getMessage());
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        return response()->json([
-            'message' => 'Success',
-            'data' => $user->load(['lecture', 'student'])
-        ]);
     }
 
     /**
@@ -189,5 +179,26 @@ class UserController extends Controller
                 ->route('users.index')
                 ->with('error', 'Failed to delete user: ' . $th->getMessage());
         }
+    }
+
+    public function profile(User $user)
+    {
+        $user->load(['lecture', 'student']);
+
+
+        $achievementsByYear = Achievement::where('student_id', $user->student?->id)
+            ->orderByDesc('date')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->date->year;
+            });
+
+        $achievementCount = Achievement::where('student_id', $user->student?->id)->count();
+
+        $achievementNasional = Achievement::where('student_id', $user->student?->id)->where('grade', 'Nasional')->count();
+
+        $achievementInternasional = Achievement::where('student_id', $user->student?->id)->where('grade', 'Internasional')->count();
+
+        return view('profile.index', compact(['user', 'achievementsByYear', 'achievementInternasional', 'achievementNasional', 'achievementCount']));
     }
 }
