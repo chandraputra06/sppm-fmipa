@@ -14,6 +14,18 @@
                 <span>Kembali ke Beranda</span>
             </a>
 
+            @if (session('success'))
+                <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- Profile Card -->
             <div class="bg-white rounded-lg shadow-md p-8 mb-6">
                 <div class="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
@@ -64,17 +76,125 @@
                         @endif
 
                         <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('users.create') }}"
+                            <a href="#edit-profile"
                                 class="flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-white hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm">
                                 <i data-lucide="pen" class="h-5 w-5 text-white-400 me-1"></i>Edit Profile
                             </a>
-                            <a href="{{ route('users.create') }}"
+                            <a href="#change-password"
                                 class="flex items-center rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm">
                                 <i data-lucide="key-round" class="h-5 w-5 text-white-400 me-1"></i>Change Password
                             </a>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Edit Profile -->
+            <div id="edit-profile" class="bg-white rounded-lg shadow-md p-8 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Edit Profil</h2>
+                <p class="text-gray-600 mb-6">Perbarui informasi akun Anda.</p>
+
+                <form action="{{ route('profile.update', $user->id) }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            required>
+                        @error('name')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            required>
+                        @error('email')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    @if (in_array($user->role, ['2', '3']))
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Program Studi</label>
+                            <select name="study_program_id"
+                                class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <option value="">-- pilih --</option>
+                                @foreach ($studyPrograms as $program)
+                                    <option value="{{ $program->id }}"
+                                        @selected(old('study_program_id', $user->student?->study_program_id ?? $user->lecture?->study_program_id) == $program->id)>
+                                        {{ $program->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('study_program_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+
+                    @if ($user->role == '3')
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">NIM</label>
+                            <input type="text" name="nim" value="{{ old('nim', $user->student?->nim) }}"
+                                class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            @error('nim')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+
+                    <button type="submit"
+                        class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm">
+                        Simpan Perubahan
+                    </button>
+                </form>
+            </div>
+
+            <!-- Change Password -->
+            <div id="change-password" class="bg-white rounded-lg shadow-md p-8 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Ganti Password</h2>
+                <p class="text-gray-600 mb-6">Pastikan password baru berbeda dari sebelumnya.</p>
+
+                <form action="{{ route('profile.password', $user->id) }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password Sekarang</label>
+                        <input type="password" name="current_password"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            required>
+                        @error('current_password')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
+                            <input type="password" name="new_password"
+                                class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                required>
+                            @error('new_password')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password Baru</label>
+                            <input type="password" name="new_password_confirmation"
+                                class="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                required>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm">
+                        Ubah Password
+                    </button>
+                </form>
             </div>
 
             <!-- Achievements Section -->

@@ -7,32 +7,37 @@
                     <img src="{{ asset('images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
                 @auth
-                <a href="{{ route('profile.show', auth()->user()->id ) }}">
-                    @php
-                        $roleMeta = auth()->user()->userRole();
-                    @endphp
-                    <div class="hidden sm:flex items-center ml-3 space-x-2 text-sm text-gray-600">
-                        <div class="leading-tight">
-                            <div class="font-semibold text-gray-800">{{ auth()->user()->name }}</div>
-                            <div class="text-xs {{ $roleMeta['text'] ?? 'text-gray-500' }}">
-                                {{ $roleMeta['label'] ?? 'User' }}
+                    <a href="{{ route('profile.show', auth()->user()->id) }}">
+                        @php
+                            $roleMeta = auth()->user()->userRole();
+                        @endphp
+                        <div class="hidden sm:flex items-center ml-3 space-x-2 text-sm text-gray-600">
+                            <div class="leading-tight">
+                                <div class="font-semibold text-gray-800">{{ auth()->user()->name }}</div>
+                                <div class="text-xs {{ $roleMeta['text'] ?? 'text-gray-500' }}">
+                                    {{ $roleMeta['label'] ?? 'User' }}
+                                </div>
                             </div>
-                        </div>
 
-                    </div>
-                </a>
+                        </div>
+                    </a>
                 @endauth
             </div>
 
             <!-- Navigation Links -->
             <div class="hidden lg:flex items-center space-x-4">
-                <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
+                <a href="{{ route('admin.dashboard') }}"
+                    class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
                     Dashboard
                 </a>
-                <a href="{{ route('users.index') }}" class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
-                    User
-                </a>
-                <a href="{{ route('study-programs.index') }}" class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
+                @if (auth()->user()->role == '1')
+                    <a href="{{ route('users.index') }}"
+                        class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
+                        User
+                    </a>
+                @endif
+                <a href="{{ route('study-programs.index') }}"
+                    class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
                     Program Studi
                 </a>
                 <a href="{{ route('achievements.upload') }}"
@@ -68,22 +73,25 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden lg:hidden pb-4">
             <a href="{{ route('admin.dashboard') }}" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
-            <a href="{{ route('users.index') }}" class="block py-2 text-gray-700 hover:text-blue-600">User</a>
+            @if (auth()->user()->role == '1')
+                <a href="{{ route('users.index') }}" class="block py-2 text-gray-700 hover:text-blue-600">User</a>
+            @endif
+
             <a href="{{ route('study-programs.index') }}" class="block py-2 text-gray-700 hover:text-blue-600">Program
                 Studi</a>
             <a href="{{ route('achievements.upload') }}" class="block py-2 text-gray-700 hover:text-blue-600">Upload
                 Excel</a>
             <a href="{{ route('achievements.create') }}" class="block py-2 text-gray-700 hover:text-blue-600">Input
                 Data Prestasi</a>
-                @auth
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="flex items-center bg-grey-100 text-dark py-2 rounded-[10px] hover:bg-gray-100 transition">
-                            <i data-lucide="log-out" class="h-5 w-5 text-gray-400 me-2"></i> Logout
-                        </button>
-                    </form>
-                @endauth
+            @auth
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="flex items-center bg-grey-100 text-dark py-2 rounded-[10px] hover:bg-gray-100 transition">
+                        <i data-lucide="log-out" class="h-5 w-5 text-gray-400 me-2"></i> Logout
+                    </button>
+                </form>
+            @endauth
         </div>
     </div>
 </nav>
