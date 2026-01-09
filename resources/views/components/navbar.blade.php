@@ -7,31 +7,36 @@
                     <img src="{{ asset('images/logo-mipa.png') }}" alt="Logo MIPA" class="h-10 w-auto">
                 </a>
                 @auth
-                    @php
-                        $roleMeta = auth()->user()->userRole();
-                    @endphp
-                    <div class="hidden sm:flex items-center ml-3 space-x-2 text-sm text-gray-600">
-                        <div class="leading-tight">
-                            <div class="font-semibold text-gray-800">{{ auth()->user()->name }}</div>
-                            <div class="text-xs {{ $roleMeta['text'] ?? 'text-gray-500' }}">
-                                {{ $roleMeta['label'] ?? 'User' }}
+                    <a href="{{ route('profile.show', auth()->user()->id ) }}">
+                        @php
+                            $roleMeta = auth()->user()->userRole();
+                        @endphp
+                        <div class="hidden sm:flex items-center ml-3 space-x-2 text-sm text-gray-600">
+                            <div class="leading-tight">
+                                <div class="font-semibold text-gray-800">{{ auth()->user()->name }}</div>
+                                <div class="text-xs {{ $roleMeta['text'] ?? 'text-gray-500' }}">
+                                    {{ $roleMeta['label'] ?? 'User' }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 @endauth
             </div>
 
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ route('homepage') }}" class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
+                <a href="{{ route('homepage') }}"
+                    class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
                     Beranda
                 </a>
-                <a href="{{ route('prestasi.index') }}" class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
+                <a href="{{ route('prestasi.index') }}"
+                    class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
                     Daftar Prestasi
                 </a>
                 @auth
                     @if (in_array(auth()->user()->role, ['1', '2']))
-                        <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="text-gray-700 hover:text-blue-600 transition text-sm md:text-xs lg:text-sm">
                             Admin Dashboard
                         </a>
                     @endif

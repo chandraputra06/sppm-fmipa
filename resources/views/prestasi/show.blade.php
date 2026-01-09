@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Profil Mahasiswa - Fakultas MIPA')
+@section('title', 'Profil Prestasi Mahasiswa - Fakultas MIPA')
 
 @section('content')
     <div class="bg-gray-50 min-h-screen py-8 mt-16">

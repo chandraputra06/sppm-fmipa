@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Models\Achievement;
 use App\Models\Lecture;
 use App\Models\Student;
 use App\Models\StudyProgram;
@@ -88,17 +91,6 @@ class UserController extends Controller
                 ->route('users.create')
                 ->with('error', 'Failed to create user: ' . $th->getMessage());
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        return response()->json([
-            'message' => 'Success',
-            'data' => $user->load(['lecture', 'student'])
-        ]);
     }
 
     /**
@@ -188,6 +180,88 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('error', 'Failed to delete user: ' . $th->getMessage());
+        }
+    }
+
+    public function profile(User $user)
+    {
+        $this->authorizeProfileAccess($user);
+
+        $user->load(['lecture', 'student']);
+        $studyPrograms = StudyProgram::get();
+
+
+        $achievementsByYear = Achievement::where('student_id', $user->student?->id)
+            ->orderByDesc('date')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->date->year;
+            });
+
+        $achievementCount = Achievement::where('student_id', $user->student?->id)->count();
+
+        $achievementNasional = Achievement::where('student_id', $user->student?->id)->where('grade', 'Nasional')->count();
+
+        $achievementInternasional = Achievement::where('student_id', $user->student?->id)->where('grade', 'Internasional')->count();
+
+        return view('profile.index', compact(['user', 'achievementsByYear', 'achievementInternasional', 'achievementNasional', 'achievementCount', 'studyPrograms']));
+    }
+
+    public function updateProfile(UpdateProfileRequest $request, User $user)
+    {
+        $this->authorizeProfileAccess($user);
+
+        DB::beginTransaction();
+        try {
+            $user->update($request->only(['name', 'email']));
+
+            if ((int) $user->role === 2) {
+                Lecture::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'name' => $request->name,
+                        'study_program_id' => $request->study_program_id,
+                    ]
+                );
+            }
+
+            if ((int) $user->role === 3) {
+                Student::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'nim' => $request->nim,
+                        'name' => $request->name,
+                        'study_program_id' => $request->study_program_id,
+                    ]
+                );
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Profil berhasil diperbarui.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal memperbarui profil: ' . $th->getMessage());
+        }
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request, User $user)
+    {
+        $this->authorizeProfileAccess($user);
+
+        if (! Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password lama tidak sesuai.']);
+        }
+
+        $user->update(['password' => Hash::make($request->new_password)]);
+
+        return back()->with('success', 'Password berhasil diubah.');
+    }
+
+    protected function authorizeProfileAccess(User $user): void
+    {
+        if (auth()->id() !== $user->id) {
+            abort(403);
         }
     }
 }
