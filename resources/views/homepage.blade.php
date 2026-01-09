@@ -5,6 +5,7 @@
 @section('content')
     <!-- Hero Section -->
     <section class="relative h-screen bg-cover bg-center" style="background-image: url('{{ asset('images/hero-bg.jpg') }}');">
+    <section class="relative h-screen bg-cover bg-center" style="background-image: url('{{ asset('images/infor-24.jpg') }}');">
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
         <div class="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-white text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
@@ -23,7 +24,7 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @forelse ($achievements as $item)
-                    <a href="{{ route('prestasi.show', $item->students->id) }}">
+                    <a href="{{ $item->student_id ? route('prestasi.show', $item->student_id) : route('prestasi.index') }}">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
                             <!-- Image Placeholder -->
                             <div class="h-48 bg-gray-300 flex items-center justify-center">
