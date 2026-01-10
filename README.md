@@ -38,6 +38,12 @@ Install icon from lucide:
 npm install lucide
 ```
 
+Install excel :
+
+```bash
+composer require maatwebsite/excel
+```
+
 ### Menjalankan aplikasi
 
 ```bash
